@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const TemplateCreate = ({ darkMode }) => {
   const [file, setFile] = useState(null);
@@ -9,20 +9,25 @@ const TemplateCreate = ({ darkMode }) => {
   const [templates, setTemplates] = useState([]);
 
   const [formData, setFormData] = useState({
-    name: '',
-    radioButtonText: '',
+    name: "",
+    radioButtonText: "",
   });
 
-  const [nameCoordinate, setNameCoordinate] = useState({ x: '', y: '' });
-  const [dateTimeCoordinate, setDateTimeCoordinate] = useState({ x: '', y: '' });
+  const [nameCoordinate, setNameCoordinate] = useState({ x: "", y: "" });
+  const [dateTimeCoordinate, setDateTimeCoordinate] = useState({
+    x: "",
+    y: "",
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const templatesPerPage = 6;
 
-  const themeCard = darkMode ? 'bg-dark text-white border-light' : 'bg-light text-dark border';
-  const inputBg = darkMode ? 'bg-secondary text-white' : '';
+  const themeCard = darkMode
+    ? "bg-dark text-white border-light"
+    : "bg-light text-dark border";
+  const inputBg = darkMode ? "bg-secondary text-white" : "";
 
-  const baseURL = 'https://cervical.praispranav.com';
+  const baseURL = "https://cervical.praispranav.com";
 
   useEffect(() => {
     fetchTemplates();
@@ -32,7 +37,7 @@ const TemplateCreate = ({ darkMode }) => {
     try {
       const res = await fetch(`${baseURL}/day-template/get-template`, {
         headers: {
-          'api-key': localStorage.getItem('apiKey'),
+          "x-api-key": localStorage.getItem("apiKey"),
         },
       });
 
@@ -44,7 +49,9 @@ const TemplateCreate = ({ darkMode }) => {
         console.warn("JSON parse error:", err);
       }
 
-      const validTemplates = data.filter(t => t.name && t.radioButtonText && t.file);
+      const validTemplates = data.filter(
+        (t) => t.name && t.radioButtonText && t.file
+      );
       setTemplates(validTemplates.reverse());
     } catch (err) {
       console.error("Failed to fetch templates", err);
@@ -69,10 +76,10 @@ const TemplateCreate = ({ darkMode }) => {
       setFile(uploadedFile);
       setPreviewURL(fileURL);
 
-      if (uploadedFile.type.includes('image')) {
-        setFileType('image');
-      } else if (uploadedFile.type === 'application/pdf') {
-        setFileType('pdf');
+      if (uploadedFile.type.includes("image")) {
+        setFileType("image");
+      } else if (uploadedFile.type === "application/pdf") {
+        setFileType("pdf");
       } else {
         setFileType(null);
         setPreviewURL(null);
@@ -85,12 +92,12 @@ const TemplateCreate = ({ darkMode }) => {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', radioButtonText: '' });
+    setFormData({ name: "", radioButtonText: "" });
     setFile(null);
     setPreviewURL(null);
     setFileType(null);
-    setNameCoordinate({ x: '', y: '' });
-    setDateTimeCoordinate({ x: '', y: '' });
+    setNameCoordinate({ x: "", y: "" });
+    setDateTimeCoordinate({ x: "", y: "" });
   };
 
   const handleSubmit = async (e) => {
@@ -104,12 +111,12 @@ const TemplateCreate = ({ darkMode }) => {
       setLoading(true);
 
       const uploadForm = new FormData();
-      uploadForm.append('file', file);
+      uploadForm.append("file", file);
 
       const uploadRes = await fetch(`${baseURL}/day-template/upload/template`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'api-key': localStorage.getItem('apiKey'),
+          "x-api-key": localStorage.getItem("apiKey"),
         },
         body: uploadForm,
       });
@@ -143,10 +150,10 @@ const TemplateCreate = ({ darkMode }) => {
       };
 
       const saveRes = await fetch(`${baseURL}/day-template/add-template`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'api-key': localStorage.getItem('apiKey'),
+          "Content-Type": "application/json",
+          "x-api-key": localStorage.getItem("apiKey"),
         },
         body: JSON.stringify(body),
       });
@@ -206,11 +213,11 @@ const TemplateCreate = ({ darkMode }) => {
         </div>
 
         <div className="mb-3">
-          <label>Upload File (Image or PDF):</label>
+          <label>Upload File (Image):</label>
           <input
             type="file"
             className="form-control"
-            accept="image/*,application/pdf"
+            accept="image/*"
             onChange={handleFileUpload}
           />
         </div>
@@ -218,16 +225,20 @@ const TemplateCreate = ({ darkMode }) => {
         {previewURL && (
           <div className="mb-3">
             <label>Preview:</label>
-            <div className={`position-relative border rounded p-2 text-center ${darkMode ? 'bg-secondary' : ''}`}>
-              {fileType === 'image' && (
+            <div
+              className={`position-relative border rounded p-2 text-center ${
+                darkMode ? "bg-secondary" : ""
+              }`}
+            >
+              {fileType === "image" && (
                 <img
                   src={previewURL}
                   alt="Preview"
                   className="img-fluid"
-                  style={{ maxHeight: '300px', opacity: loading ? 0.5 : 1 }}
+                  style={{ maxHeight: "300px", opacity: loading ? 0.5 : 1 }}
                 />
               )}
-              {fileType === 'pdf' && (
+              {fileType === "pdf" && (
                 <embed
                   src={previewURL}
                   type="application/pdf"
@@ -239,7 +250,7 @@ const TemplateCreate = ({ darkMode }) => {
               {loading && (
                 <div
                   className="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-                  style={{ background: 'rgba(255,255,255,0.6)', zIndex: 10 }}
+                  style={{ background: "rgba(255,255,255,0.6)", zIndex: 10 }}
                 >
                   <div className="spinner-border text-primary" role="status">
                     <span className="visually-hidden">Uploading...</span>
@@ -258,14 +269,18 @@ const TemplateCreate = ({ darkMode }) => {
               className={`form-control ${inputBg}`}
               placeholder="X"
               value={nameCoordinate.x}
-              onChange={(e) => setNameCoordinate({ ...nameCoordinate, x: e.target.value })}
+              onChange={(e) =>
+                setNameCoordinate({ ...nameCoordinate, x: e.target.value })
+              }
             />
             <input
               type="number"
               className={`form-control ${inputBg}`}
               placeholder="Y"
               value={nameCoordinate.y}
-              onChange={(e) => setNameCoordinate({ ...nameCoordinate, y: e.target.value })}
+              onChange={(e) =>
+                setNameCoordinate({ ...nameCoordinate, y: e.target.value })
+              }
             />
           </div>
         </div>
@@ -278,24 +293,38 @@ const TemplateCreate = ({ darkMode }) => {
               className={`form-control ${inputBg}`}
               placeholder="X"
               value={dateTimeCoordinate.x}
-              onChange={(e) => setDateTimeCoordinate({ ...dateTimeCoordinate, x: e.target.value })}
+              onChange={(e) =>
+                setDateTimeCoordinate({
+                  ...dateTimeCoordinate,
+                  x: e.target.value,
+                })
+              }
             />
             <input
               type="number"
               className={`form-control ${inputBg}`}
               placeholder="Y"
               value={dateTimeCoordinate.y}
-              onChange={(e) => setDateTimeCoordinate({ ...dateTimeCoordinate, y: e.target.value })}
+              onChange={(e) =>
+                setDateTimeCoordinate({
+                  ...dateTimeCoordinate,
+                  y: e.target.value,
+                })
+              }
             />
           </div>
         </div>
 
-        <button type="submit" className="btn btn-success w-100" disabled={loading}>
-          {loading ? 'Saving...' : 'Save Template'}
+        <button
+          type="submit"
+          className="btn btn-success w-100"
+          disabled={loading}
+        >
+          {loading ? "Saving..." : "Save Template"}
         </button>
       </form>
 
-      <hr  className="my-5"/>
+      <hr className="my-5" />
 
       {templates.length > 0 && (
         <div>
@@ -306,11 +335,21 @@ const TemplateCreate = ({ darkMode }) => {
                 <div className={`card h-100 shadow-sm ${themeCard}`}>
                   <div className="card-body">
                     <h5 className="card-title">{template.name}</h5>
-                    <p><strong>Radio:</strong> {template.radioButtonText}</p>
-                    <p><strong>Name Coord:</strong> X: {template.nameCoordinate?.x}, Y: {template.nameCoordinate?.y}</p>
-                    <p><strong>Date Coord:</strong> X: {template.dateTimeCoordinate?.x}, Y: {template.dateTimeCoordinate?.y}</p>
+                    <p>
+                      <strong>Radio:</strong> {template.radioButtonText}
+                    </p>
+                    <p>
+                      <strong>Name Coord:</strong> X:{" "}
+                      {template.nameCoordinate?.x}, Y:{" "}
+                      {template.nameCoordinate?.y}
+                    </p>
+                    <p>
+                      <strong>Date Coord:</strong> X:{" "}
+                      {template.dateTimeCoordinate?.x}, Y:{" "}
+                      {template.dateTimeCoordinate?.y}
+                    </p>
 
-                    {template.file.toLowerCase().endsWith('.pdf') ? (
+                    {template.file.toLowerCase().endsWith(".pdf") ? (
                       <div className="text-center mt-2">
                         <p className="text-muted">PDF File</p>
                         <a
@@ -325,10 +364,10 @@ const TemplateCreate = ({ darkMode }) => {
                     ) : (
                       <div className="text-center">
                         <img
-                          src={`${baseURL}/static/${template.file}`}
+                          src={`${baseURL}/templates/${template.file}`}
                           alt={template.name}
                           className="img-fluid rounded"
-                          style={{ maxHeight: '200px', objectFit: 'contain' }}
+                          style={{ maxHeight: "200px", objectFit: "contain" }}
                         />
                       </div>
                     )}
@@ -342,16 +381,44 @@ const TemplateCreate = ({ darkMode }) => {
             <div className="d-flex justify-content-center mt-4">
               <nav>
                 <ul className="pagination">
-                  <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                    >
+                      Previous
+                    </button>
                   </li>
                   {Array.from({ length: totalPages }, (_, i) => (
-                    <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
-                      <button className="page-link" onClick={() => handlePageChange(i + 1)}>{i + 1}</button>
+                    <li
+                      key={i}
+                      className={`page-item ${
+                        currentPage === i + 1 ? "active" : ""
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(i + 1)}
+                      >
+                        {i + 1}
+                      </button>
                     </li>
                   ))}
-                  <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+                  <li
+                    className={`page-item ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                      Next
+                    </button>
                   </li>
                 </ul>
               </nav>
