@@ -30,13 +30,14 @@ const CarouselControl = ({ darkMode }) => {
   const fetchSlides = async () => {
     try {
       const res = await axios.get(`${baseURL}/day-template/get-slide`, {
-        headers: { "api-key": apiKey },
+        headers: { "x-api-key": apiKey },
       });
 
       const formatted = res.data.map((slide) => ({
         ...slide,
         imageFile: null,
         preview: slide.image ? `${baseURL}/static/${slide.image}` : "",
+        align: slide.align || "left",
       }));
 
       setSlides(formatted);
@@ -65,6 +66,7 @@ const CarouselControl = ({ darkMode }) => {
         buttonLink: "",
         imageFile: null,
         preview: "",
+        align: "left",
       },
     ]);
   };
@@ -89,7 +91,7 @@ const CarouselControl = ({ darkMode }) => {
             {
               headers: {
                 "Content-Type": "multipart/form-data",
-                "api-key": apiKey,
+                "x-api-key": apiKey,
               },
             }
           );
@@ -106,6 +108,7 @@ const CarouselControl = ({ darkMode }) => {
           showButton: slide.showButton,
           buttonText: slide.buttonText,
           buttonLink: slide.buttonLink,
+          align: slide.align,
         };
 
         if (slide._id) {
@@ -113,12 +116,12 @@ const CarouselControl = ({ darkMode }) => {
             `${baseURL}/day-template/update-slider`,
             { ...payload, _id: slide._id },
             {
-              headers: { "api-key": apiKey },
+              headers: { "x-api-key": apiKey },
             }
           );
         } else {
           return axios.post(`${baseURL}/day-template/add-slide`, payload, {
-            headers: { "api-key": apiKey },
+            headers: { "x-api-key": apiKey },
           });
         }
       });
@@ -212,6 +215,18 @@ const CarouselControl = ({ darkMode }) => {
               handleSlideChange(index, "imageCaption", e.target.value)
             }
           />
+
+          <div className="mb-2">
+            <label className="form-label">Align:</label>
+            <select
+              className="form-select"
+              value={slide.align}
+              onChange={(e) => handleSlideChange(index, "align", e.target.value)}
+            >
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
 
           <div className="d-flex align-items-center justify-content-between mb-2">
             <strong>Show Button:</strong>

@@ -26,7 +26,7 @@ const FormControl = ({ darkMode }) => {
   const getTemplates = async () => {
     try {
       const res = await axios.get('https://cervical.praispranav.com/day-template/get-template', {
-        headers: { 'api-key': apiKey }
+        headers: { 'x-api-key': apiKey }
       });
       const options = (res.data || []).map(temp => ({
         label: temp.name,
@@ -42,7 +42,7 @@ const FormControl = ({ darkMode }) => {
   const getFormControl = async () => {
     try {
       const res = await axios.get('https://cervical.praispranav.com/day-template/get-form-control', {
-        headers: { 'api-key': apiKey }
+        headers: { 'x-api-key': apiKey }
       });
       const data = res.data;
       if (!data) return;
@@ -83,11 +83,21 @@ const FormControl = ({ darkMode }) => {
     setFields(updated);
   };
 
+
+  // const toggleRadioOptionVisibility = (index) => {
+  //   const updated = [...coordinateOptions];
+  //   updated[index].show = !updated[index].show;
+  //   setCoordinateOptions(updated);
+  // };
+
   const toggleRadioOptionVisibility = (index) => {
-    const updated = [...coordinateOptions];
-    updated[index].show = !updated[index].show;
+    const updated = coordinateOptions.map((opt, i) => ({
+      ...opt,
+      show: i === index ? true : false
+    }));
     setCoordinateOptions(updated);
   };
+  
 
   const addNewField = () => {
     const label = newFieldLabel.trim();
@@ -123,7 +133,7 @@ const FormControl = ({ darkMode }) => {
         url,
         headers: {
           'Content-Type': 'application/json',
-          'api-key': apiKey
+          'x-api-key': apiKey
         },
         data: body
       });
@@ -233,48 +243,6 @@ const FormControl = ({ darkMode }) => {
 
       <div className="d-flex justify-content-end mb-2">
         <button className="btn btn-outline-primary" onClick={handleSave}>Update Changes</button>
-      </div>
-
-      <hr />
-      <h5>Live Preview</h5>
-      <div className={`preview mt-4 p-3 border rounded ${darkMode ? 'bg-secondary text-white' : 'bg-light'}`}>
-        <h5 className="text-center mb-3">{formTitle}</h5>
-        <form>
-          {fields.filter(f => f.show).map((field, i) => (
-            <input
-              key={i}
-              type="text"
-              className={`form-control mb-2 ${inputBg}`}
-              placeholder={field.label}
-            />
-          ))}
-
-          {coordinateOptions.some(opt => opt.show) && (
-            <div className="mb-3">
-              {coordinateOptions.filter(opt => opt.show).map((opt, i) => (
-                <div className="form-check" key={i}>
-                  <input
-                    type="radio"
-                    className="form-check-input"
-                    name="coordinate"
-                    id={`radio-${i}`}
-                  />
-                  <label className="form-check-label" htmlFor={`radio-${i}`}>
-                    {opt.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="btn w-100 mt-3"
-            style={{ backgroundColor: buttonColor, color: '#fff' }}
-          >
-            {buttonText}
-          </button>
-        </form>
       </div>
     </div>
   );

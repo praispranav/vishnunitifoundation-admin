@@ -9,6 +9,7 @@ import './App.css';
 import { AppLayout } from "./components/AppLayout";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EventSliderControl from "./pages/EventSliderControl";
 
 
 const LayoutWrapper = ({ children, darkMode, toggleDarkMode }) => {
@@ -46,6 +47,12 @@ const App = () => {
             path="/carousel-control"
             element={
               isLoggedIn ? <CarouselControl darkMode={darkMode} /> : <Navigate to="/login" replace />
+            }
+          />
+            <Route
+            path="/event-control"
+            element={
+              isLoggedIn ? <EventSliderControl darkMode={darkMode} /> : <Navigate to="/login" replace />
             }
           />
           <Route path="/login" element={<LoginPage />} />

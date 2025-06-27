@@ -12,6 +12,7 @@ import {
   FaImages,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { MdEventAvailable } from "react-icons/md";
 
 export const AppLayout = ({ children, darkMode, toggleDarkMode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -24,6 +25,7 @@ export const AppLayout = ({ children, darkMode, toggleDarkMode }) => {
     "/": "Templates",
     "/form-control": "Form Control",
     "/carousel-control": "Slider Control",
+    "/event-control": "Event Control",
   };
 
   const currentRoute = routeTitles[location.pathname] || "";
@@ -88,6 +90,17 @@ export const AppLayout = ({ children, darkMode, toggleDarkMode }) => {
           >
             <FaImages className="me-2" />
             {sidebarOpen && "Carousel Control"}
+          </Link>
+          <Link
+            to="/event-control"
+            className={`nav-link ${
+              location.pathname === "/event-control"
+                ? "bg-white text-dark rounded"
+                : "text-white"
+            }`}
+          >
+            <MdEventAvailable className="me-2" />
+            {sidebarOpen && "Event Control"}
           </Link>
         </nav>
       </aside>
