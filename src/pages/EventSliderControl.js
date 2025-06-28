@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
 
 const baseURL = "https://cervical.praispranav.com";
 
@@ -10,7 +11,9 @@ const EventSliderControl = ({ darkMode }) => {
   const [apiKey, setApiKey] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const cardClass = darkMode ? "bg-dark text-white border-light" : "bg-white text-dark border";
+  const cardClass = darkMode
+    ? "bg-dark text-white border-light"
+    : "bg-white text-dark border";
   const formClass = darkMode ? "bg-secondary text-white" : "bg-light";
 
   useEffect(() => {
@@ -37,8 +40,8 @@ const EventSliderControl = ({ darkMode }) => {
           ...e,
           preview: `${baseURL}/static/${e.image}`,
           imageFile: null,
-          eventDate: dateObj.toISOString().split("T")[0],
-          eventTime: dateObj.toISOString().split("T")[1]?.slice(0, 5) || "09:00", 
+          eventDate: moment(dateObj).format("YYYY-MM-DD"),
+          eventTime: moment(dateObj).format("hh:mm"),
         };
       });
       setEvents(data);
@@ -117,14 +120,20 @@ const EventSliderControl = ({ darkMode }) => {
           heading: event.heading,
           subHeading: event.subHeading,
           image: filename,
-          eventDate: new Date(`${event.eventDate}T${event.eventTime}:00`).toISOString(),
+          eventDate: new Date(
+            `${event.eventDate}T${event.eventTime}:00`
+          ).toISOString(),
         };
 
         if (event._id) {
-          await axios.patch(`${baseURL}/day-template/update-event`, {
-            ...payload,
-            _id: event._id,
-          }, { headers: { "x-api-key": apiKey } });
+          await axios.patch(
+            `${baseURL}/day-template/update-event`,
+            {
+              ...payload,
+              _id: event._id,
+            },
+            { headers: { "x-api-key": apiKey } }
+          );
         } else {
           await axios.post(`${baseURL}/day-template/create-event`, payload, {
             headers: { "x-api-key": apiKey },
@@ -147,7 +156,10 @@ const EventSliderControl = ({ darkMode }) => {
       <h3 className="mb-4">Events Control</h3>
 
       {events.map((event, index) => (
-        <div key={event._id || index} className={`p-3 mb-4 rounded border ${formClass}`}>
+        <div
+          key={event._id || index}
+          className={`p-3 mb-4 rounded border ${formClass}`}
+        >
           <div className="d-flex justify-content-between align-items-center mb-2">
             <h5>Event {index + 1}</h5>
             {event._id && (
@@ -178,7 +190,9 @@ const EventSliderControl = ({ darkMode }) => {
                 type="date"
                 className="form-control"
                 value={event.eventDate || ""}
-                onChange={(e) => handleChange(index, "eventDate", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "eventDate", e.target.value)
+                }
               />
             </div>
             <div className="col-md-6 mb-2">
@@ -186,7 +200,9 @@ const EventSliderControl = ({ darkMode }) => {
                 type="time"
                 className="form-control"
                 value={event.eventTime || ""}
-                onChange={(e) => handleChange(index, "eventTime", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "eventTime", e.target.value)
+                }
               />
             </div>
           </div>
@@ -209,10 +225,18 @@ const EventSliderControl = ({ darkMode }) => {
       ))}
 
       <div className="d-flex justify-content-between mt-4">
-        <button className="btn btn-secondary" onClick={addNewEvent} disabled={loading}>
+        <button
+          className="btn btn-secondary"
+          onClick={addNewEvent}
+          disabled={loading}
+        >
           + Add Event
         </button>
-        <button className="btn btn-primary" onClick={saveEvents} disabled={loading}>
+        <button
+          className="btn btn-primary"
+          onClick={saveEvents}
+          disabled={loading}
+        >
           {loading ? (
             <>
               <span
